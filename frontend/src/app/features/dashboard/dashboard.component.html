@@ -2,9 +2,11 @@
   <div class="dash-header">
     <h2>Dashboard - Registro de Ausencias</h2>
     <div class="dash-actions">
-      <select [(ngModel)]="currentYear" (change)="loadData()">
-        <option *ngFor="let y of years" [value]="y">{{ y }}</option>
-      </select>
+      <div class="year-selector">
+        <button class="year-btn" (click)="currentYear = currentYear - 1; loadData()">◀</button>
+        <span class="year-label">{{ currentYear }}</span>
+        <button class="year-btn" (click)="currentYear = currentYear + 1; loadData()">▶</button>
+      </div>
       <button class="btn btn-primary" (click)="exportExcel()" [disabled]="summaries.length === 0">
         📥 Exportar Excel
       </button>

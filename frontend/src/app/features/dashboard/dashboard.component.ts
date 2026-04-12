@@ -14,8 +14,6 @@ export class DashboardComponent implements OnInit {
   labels = ABSENCE_LABELS;
   colors = ABSENCE_COLORS;
   absenceTypes: AbsenceType[] = ['F', 'V', 'VT', 'C'];
-  years: number[] = [];
-
   totalFlex = 0;
   totalVacation = 0;
   totalVacationTaken = 0;
@@ -24,10 +22,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private absenceService: AbsenceService,
     private employeeService: EmployeeService
-  ) {
-    const now = new Date().getFullYear();
-    for (let y = now - 3; y <= now + 1; y++) { this.years.push(y); }
-  }
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
