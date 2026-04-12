@@ -5,6 +5,7 @@
     display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
     h2 { color: #333; }
+    .header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
   }
 
   .filters {
@@ -47,6 +48,13 @@
         }
       }
       .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
+
+      .date-range {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      }
+      .range-hint {
+        font-size: 12px; color: #888; font-style: italic; margin-bottom: 12px;
+      }
 
       &.confirm-card {
         text-align: center; max-width: 420px;

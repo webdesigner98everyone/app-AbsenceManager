@@ -4,6 +4,14 @@ import { Observable } from 'rxjs';
 import { Absence, AbsenceSummary } from '../models';
 import { environment } from '../../environments/environment';
 
+export interface AbsenceRange {
+  employeeId: number;
+  startDate: string;
+  endDate: string;
+  type: string;
+  notes?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AbsenceService {
   private url = `${environment.apiUrl}/absences`;
@@ -31,6 +39,10 @@ export class AbsenceService {
 
   create(absence: Partial<Absence>): Observable<Absence> {
     return this.http.post<Absence>(this.url, absence);
+  }
+
+  createRange(range: AbsenceRange): Observable<Absence[]> {
+    return this.http.post<Absence[]>(`${this.url}/range`, range);
   }
 
   update(id: number, absence: Partial<Absence>): Observable<Absence> {

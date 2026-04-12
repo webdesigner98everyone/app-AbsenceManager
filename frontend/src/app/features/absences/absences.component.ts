@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbsenceService, EmployeeService } from '../../core/services';
+import { AbsenceRange } from '../../core/services/absence.service';
 import { Absence, AbsenceType, Employee, ABSENCE_LABELS, ABSENCE_COLORS } from '../../core/models';
 import { ToastService } from '../../shared/services/toast.service';
 
@@ -17,9 +18,11 @@ export class AbsencesComponent implements OnInit {
 
   showForm = false;
   showConfirmDelete = false;
+  isRangeMode = false;
   deleteTarget: Absence | null = null;
   editingAbsence: Absence | null = null;
   form: Partial<Absence> = {};
+  rangeForm: AbsenceRange = { employeeId: 0, startDate: '', endDate: '', type: 'F' };
   errors: { [key: string]: string } = {};
 
   filterEmployee = 0;
@@ -48,13 +51,24 @@ export class AbsencesComponent implements OnInit {
 
   openCreate(): void {
     this.editingAbsence = null;
+    this.isRangeMode = false;
     this.form = { type: 'F', date: new Date().toISOString().split('T')[0] };
+    this.errors = {};
+    this.showForm = true;
+  }
+
+  openCreateRange(): void {
+    this.editingAbsence = null;
+    this.isRangeMode = true;
+    const today = new Date().toISOString().split('T')[0];
+    this.rangeForm = { employeeId: 0, startDate: today, endDate: today, type: 'F' };
     this.errors = {};
     this.showForm = true;
   }
 
   openEdit(absence: Absence): void {
     this.editingAbsence = absence;
+    this.isRangeMode = false;
     this.form = { ...absence };
     this.errors = {};
     this.showForm = true;
@@ -62,14 +76,32 @@ export class AbsencesComponent implements OnInit {
 
   validate(): boolean {
     this.errors = {};
-    if (!this.form.employeeId) {
-      this.errors['employeeId'] = 'Debe seleccionar un empleado';
-    }
-    if (!this.form.date) {
-      this.errors['date'] = 'La fecha es obligatoria';
-    }
-    if (!this.form.type) {
-      this.errors['type'] = 'Debe seleccionar un tipo de ausencia';
+    if (this.isRangeMode) {
+      if (!this.rangeForm.employeeId || Number(this.rangeForm.employeeId) === 0) {
+        this.errors['employeeId'] = 'Debe seleccionar un empleado';
+      }
+      if (!this.rangeForm.startDate) {
+        this.errors['startDate'] = 'La fecha inicio es obligatoria';
+      }
+      if (!this.rangeForm.endDate) {
+        this.errors['endDate'] = 'La fecha fin es obligatoria';
+      }
+      if (this.rangeForm.startDate && this.rangeForm.endDate && this.rangeForm.startDate > this.rangeForm.endDate) {
+        this.errors['endDate'] = 'La fecha fin debe ser posterior a la fecha inicio';
+      }
+      if (!this.rangeForm.type) {
+        this.errors['type'] = 'Debe seleccionar un tipo';
+      }
+    } else {
+      if (!this.form.employeeId) {
+        this.errors['employeeId'] = 'Debe seleccionar un empleado';
+      }
+      if (!this.form.date) {
+        this.errors['date'] = 'La fecha es obligatoria';
+      }
+      if (!this.form.type) {
+        this.errors['type'] = 'Debe seleccionar un tipo de ausencia';
+      }
     }
     return Object.keys(this.errors).length === 0;
   }
@@ -80,7 +112,18 @@ export class AbsencesComponent implements OnInit {
       return;
     }
 
-    if (this.editingAbsence) {
+    if (this.isRangeMode) {
+      this.absenceService.createRange(this.rangeForm).subscribe({
+        next: (created) => {
+          this.showForm = false;
+          this.toast.success(`Se registraron ${created.length} ausencias correctamente`);
+          this.loadAbsences();
+        },
+        error: (err) => {
+          this.toast.error(err.message || 'Error al registrar las ausencias');
+        }
+      });
+    } else if (this.editingAbsence) {
       this.absenceService.update(this.editingAbsence.id, this.form).subscribe({
         next: () => {
           this.showForm = false;
@@ -88,11 +131,7 @@ export class AbsencesComponent implements OnInit {
           this.loadAbsences();
         },
         error: (err) => {
-          if (err.status === 400) {
-            this.toast.error('Ya existe una ausencia para este empleado en esta fecha');
-          } else {
-            this.toast.error('Error al actualizar la ausencia');
-          }
+          this.toast.error(err.status === 400 ? 'Ya existe una ausencia para este empleado en esta fecha' : 'Error al actualizar');
         }
       });
     } else {
@@ -103,11 +142,7 @@ export class AbsencesComponent implements OnInit {
           this.loadAbsences();
         },
         error: (err) => {
-          if (err.status === 400) {
-            this.toast.error('Ya existe una ausencia para este empleado en esta fecha');
-          } else {
-            this.toast.error('Error al registrar la ausencia');
-          }
+          this.toast.error(err.status === 400 ? 'Ya existe una ausencia para este empleado en esta fecha' : 'Error al registrar');
         }
       });
     }

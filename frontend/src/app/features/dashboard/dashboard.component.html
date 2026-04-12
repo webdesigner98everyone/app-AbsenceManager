@@ -1,5 +1,15 @@
 <div class="dashboard">
-  <h2>Dashboard - Registro de Ausencias {{ currentYear }}</h2>
+  <div class="dash-header">
+    <h2>Dashboard - Registro de Ausencias</h2>
+    <div class="dash-actions">
+      <select [(ngModel)]="currentYear" (change)="loadData()">
+        <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+      </select>
+      <button class="btn btn-primary" (click)="exportExcel()" [disabled]="summaries.length === 0">
+        📥 Exportar Excel
+      </button>
+    </div>
+  </div>
 
   <div class="cards">
     <div class="card" *ngFor="let type of absenceTypes">
@@ -16,7 +26,7 @@
   </div>
 
   <div class="table-container">
-    <h3>Resumen por Empleado</h3>
+    <h3>Resumen por Empleado - {{ currentYear }}</h3>
     <table>
       <thead>
         <tr>
@@ -36,6 +46,9 @@
           <td><span class="badge" [style.background-color]="colors['VT']">{{ s.vacationTaken }}</span></td>
           <td><span class="badge" [style.background-color]="colors['C']">{{ s.compensatory }}</span></td>
           <td><strong>{{ s.total }}</strong></td>
+        </tr>
+        <tr *ngIf="summaries.length === 0">
+          <td colspan="6" class="empty">No hay registros para el año {{ currentYear }}</td>
         </tr>
       </tbody>
     </table>

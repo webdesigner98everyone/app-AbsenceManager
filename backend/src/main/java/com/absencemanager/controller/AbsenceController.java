@@ -1,6 +1,7 @@
 package com.absencemanager.controller;
 
 import com.absencemanager.dto.AbsenceDTO;
+import com.absencemanager.dto.AbsenceRangeDTO;
 import com.absencemanager.dto.AbsenceSummaryDTO;
 import com.absencemanager.service.AbsenceService;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,12 @@ public class AbsenceController {
     @ResponseStatus(HttpStatus.CREATED)
     public AbsenceDTO create(@RequestBody AbsenceDTO dto) {
         return service.create(dto);
+    }
+
+    @PostMapping("/range")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<AbsenceDTO> createRange(@RequestBody AbsenceRangeDTO dto) {
+        return service.createRange(dto);
     }
 
     @PutMapping("/{id}")

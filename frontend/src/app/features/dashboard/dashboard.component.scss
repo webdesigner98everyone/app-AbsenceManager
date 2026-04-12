@@ -1,7 +1,21 @@
 .dashboard {
   padding: 20px;
 
-  h2 { color: #333; margin-bottom: 24px; font-size: 22px; }
+  h2 { color: #333; }
+
+  .dash-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+
+    .dash-actions {
+      display: flex; gap: 12px; align-items: center;
+      select {
+        padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px;
+        font-size: 14px; background: #fff; cursor: pointer;
+        &:focus { outline: none; border-color: #2196F3; }
+      }
+    }
+  }
 
   .cards {
     display: grid;
@@ -56,6 +70,7 @@
       }
       th { background: #f8f9fa; font-weight: 600; color: #555; }
       tr:hover td { background: #f8f9fa; }
+      .empty { text-align: center; color: #999; padding: 40px; white-space: normal; }
     }
   }
 

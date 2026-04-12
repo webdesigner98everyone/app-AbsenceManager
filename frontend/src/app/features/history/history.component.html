@@ -1,0 +1,70 @@
+<div class="history">
+  <div class="header">
+    <h2>Historial por Empleado</h2>
+    <button class="btn btn-primary" (click)="exportHistory()" [disabled]="absences.length === 0">
+      📥 Exportar
+    </button>
+  </div>
+
+  <div class="selector">
+    <select [(ngModel)]="selectedEmployee" (change)="loadHistory()">
+      <option [value]="0">-- Seleccione un empleado --</option>
+      <option *ngFor="let emp of employees" [value]="emp.id">{{ emp.fullName }}</option>
+    </select>
+  </div>
+
+  <div class="summary-cards" *ngIf="absences.length > 0">
+    <div class="s-card">
+      <span class="s-label">Flex/Permiso</span>
+      <span class="s-value" [style.color]="colors['F']">{{ totalFlex }}</span>
+    </div>
+    <div class="s-card">
+      <span class="s-label">Vacaciones</span>
+      <span class="s-value" [style.color]="colors['V']">{{ totalVacation }}</span>
+    </div>
+    <div class="s-card">
+      <span class="s-label">Vac. Tomadas</span>
+      <span class="s-value" [style.color]="colors['VT']">{{ totalVacationTaken }}</span>
+    </div>
+    <div class="s-card">
+      <span class="s-label">Compensatorio</span>
+      <span class="s-value" [style.color]="colors['C']">{{ totalCompensatory }}</span>
+    </div>
+    <div class="s-card total">
+      <span class="s-label">Total Dias</span>
+      <span class="s-value">{{ totalDays }}</span>
+    </div>
+  </div>
+
+  <div class="table-container" *ngIf="selectedEmployee > 0">
+    <h3>Detalle - {{ getEmployeeName() }}</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Notas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let a of absences">
+          <td>{{ a.date }}</td>
+          <td>
+            <span class="type-badge" [style.background-color]="colors[a.type]">
+              {{ labels[a.type] }}
+            </span>
+          </td>
+          <td>{{ a.notes || '-' }}</td>
+        </tr>
+        <tr *ngIf="absences.length === 0">
+          <td colspan="3" class="empty">Este empleado no tiene ausencias registradas</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" *ngIf="selectedEmployee == 0">
+    <span class="empty-icon">👤</span>
+    <p>Seleccione un empleado para ver su historial completo de ausencias</p>
+  </div>
+</div>

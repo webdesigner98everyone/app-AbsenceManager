@@ -11,6 +11,7 @@ import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { EmployeesComponent } from './features/employees/employees.component';
 import { AbsencesComponent } from './features/absences/absences.component';
 import { CalendarComponent } from './features/calendar/calendar.component';
+import { HistoryComponent } from './features/history/history.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
 
 @NgModule({
@@ -20,6 +21,7 @@ import { ToastComponent } from './shared/components/toast/toast.component';
     EmployeesComponent,
     AbsencesComponent,
     CalendarComponent,
+    HistoryComponent,
     ToastComponent
   ],
   imports: [

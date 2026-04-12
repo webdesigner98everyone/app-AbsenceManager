@@ -13,6 +13,7 @@ export class AppComponent {
     { path: '/dashboard', label: 'Dashboard', icon: '📊' },
     { path: '/calendar', label: 'Calendario', icon: '📅' },
     { path: '/absences', label: 'Ausencias', icon: '📋' },
+    { path: '/history', label: 'Historial', icon: '📜' },
     { path: '/employees', label: 'Empleados', icon: '👥' }
   ];
 

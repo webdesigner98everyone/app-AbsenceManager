@@ -1,6 +1,7 @@
 package com.absencemanager.service;
 
 import com.absencemanager.dto.AbsenceDTO;
+import com.absencemanager.dto.AbsenceRangeDTO;
 import com.absencemanager.dto.AbsenceSummaryDTO;
 import com.absencemanager.exception.ResourceNotFoundException;
 import com.absencemanager.model.Absence;
@@ -8,6 +9,9 @@ import com.absencemanager.model.AbsenceType;
 import com.absencemanager.model.Employee;
 import com.absencemanager.repository.AbsenceRepository;
 import org.springframework.stereotype.Service;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -64,6 +68,35 @@ public class AbsenceService {
         absence.setType(dto.getType());
         absence.setNotes(dto.getNotes());
         return toDTO(repository.save(absence));
+    }
+
+    public List<AbsenceDTO> createRange(AbsenceRangeDTO dto) {
+        if (dto.getStartDate().isAfter(dto.getEndDate())) {
+            throw new IllegalArgumentException("La fecha inicio no puede ser posterior a la fecha fin");
+        }
+        Employee employee = employeeService.findById(dto.getEmployeeId());
+        List<AbsenceDTO> created = new ArrayList<>();
+        LocalDate current = dto.getStartDate();
+
+        while (!current.isAfter(dto.getEndDate())) {
+            DayOfWeek dow = current.getDayOfWeek();
+            if (dow != DayOfWeek.SATURDAY && dow != DayOfWeek.SUNDAY) {
+                if (!repository.existsByEmployeeIdAndDate(dto.getEmployeeId(), current)) {
+                    Absence absence = new Absence();
+                    absence.setEmployee(employee);
+                    absence.setDate(current);
+                    absence.setType(dto.getType());
+                    absence.setNotes(dto.getNotes());
+                    created.add(toDTO(repository.save(absence)));
+                }
+            }
+            current = current.plusDays(1);
+        }
+
+        if (created.isEmpty()) {
+            throw new IllegalArgumentException("No se crearon ausencias. Puede que ya existan registros en esas fechas.");
+        }
+        return created;
     }
 
     public AbsenceDTO update(Long id, AbsenceDTO dto) {
