@@ -28,58 +28,70 @@
     <div class="form-card">
       <h3>{{ editingAbsence ? 'Editar Ausencia' : isRangeMode ? 'Nueva Ausencia - Rango de Dias' : 'Nueva Ausencia - Un Dia' }}</h3>
 
-      <!-- Empleado (ambos modos) -->
-      <div class="form-group" [class.has-error]="errors['employeeId']">
-        <label>Empleado <span class="required">*</span></label>
-        <select [(ngModel)]="isRangeMode ? rangeForm.employeeId : form.employeeId"
-                (ngModelChange)="isRangeMode ? rangeForm.employeeId = $event : form.employeeId = $event">
-          <option [ngValue]="undefined" disabled *ngIf="!isRangeMode">-- Seleccione un empleado --</option>
-          <option [value]="0" disabled *ngIf="isRangeMode">-- Seleccione un empleado --</option>
-          <option *ngFor="let emp of employees" [value]="emp.id">{{ emp.fullName }}</option>
-        </select>
-        <span class="error-msg" *ngIf="errors['employeeId']">{{ errors['employeeId'] }}</span>
-      </div>
-
-      <!-- Fecha unica (modo normal) -->
-      <div class="form-group" [class.has-error]="errors['date']" *ngIf="!isRangeMode">
-        <label>Fecha <span class="required">*</span></label>
-        <input type="date" [(ngModel)]="form.date">
-        <span class="error-msg" *ngIf="errors['date']">{{ errors['date'] }}</span>
-      </div>
-
-      <!-- Rango de fechas -->
-      <div *ngIf="isRangeMode" class="date-range">
-        <div class="form-group" [class.has-error]="errors['startDate']">
-          <label>Fecha Inicio <span class="required">*</span></label>
-          <input type="date" [(ngModel)]="rangeForm.startDate">
-          <span class="error-msg" *ngIf="errors['startDate']">{{ errors['startDate'] }}</span>
+      <!-- ===== MODO NORMAL / EDITAR ===== -->
+      <ng-container *ngIf="!isRangeMode">
+        <div class="form-group" [class.has-error]="errors['employeeId']">
+          <label>Empleado <span class="required">*</span></label>
+          <select [(ngModel)]="form.employeeId">
+            <option [ngValue]="undefined" disabled>-- Seleccione un empleado --</option>
+            <option *ngFor="let emp of employees" [value]="emp.id">{{ emp.fullName }}</option>
+          </select>
+          <span class="error-msg" *ngIf="errors['employeeId']">{{ errors['employeeId'] }}</span>
         </div>
-        <div class="form-group" [class.has-error]="errors['endDate']">
-          <label>Fecha Fin <span class="required">*</span></label>
-          <input type="date" [(ngModel)]="rangeForm.endDate">
-          <span class="error-msg" *ngIf="errors['endDate']">{{ errors['endDate'] }}</span>
+        <div class="form-group" [class.has-error]="errors['date']">
+          <label>Fecha <span class="required">*</span></label>
+          <input type="date" [(ngModel)]="form.date">
+          <span class="error-msg" *ngIf="errors['date']">{{ errors['date'] }}</span>
         </div>
-      </div>
-      <p class="range-hint" *ngIf="isRangeMode">* Los fines de semana se excluyen automaticamente</p>
+        <div class="form-group" [class.has-error]="errors['type']">
+          <label>Tipo <span class="required">*</span></label>
+          <select [(ngModel)]="form.type">
+            <option [ngValue]="undefined" disabled>-- Seleccione un tipo --</option>
+            <option *ngFor="let t of absenceTypes" [value]="t">{{ labels[t] }}</option>
+          </select>
+          <span class="error-msg" *ngIf="errors['type']">{{ errors['type'] }}</span>
+        </div>
+        <div class="form-group">
+          <label>Notas</label>
+          <textarea [(ngModel)]="form.notes" rows="3" placeholder="Observaciones (opcional)..."></textarea>
+        </div>
+      </ng-container>
 
-      <!-- Tipo -->
-      <div class="form-group" [class.has-error]="errors['type']">
-        <label>Tipo <span class="required">*</span></label>
-        <select [(ngModel)]="isRangeMode ? rangeForm.type : form.type"
-                (ngModelChange)="isRangeMode ? rangeForm.type = $event : form.type = $event">
-          <option [ngValue]="undefined" disabled *ngIf="!isRangeMode">-- Seleccione un tipo --</option>
-          <option *ngFor="let t of absenceTypes" [value]="t">{{ labels[t] }}</option>
-        </select>
-        <span class="error-msg" *ngIf="errors['type']">{{ errors['type'] }}</span>
-      </div>
-
-      <!-- Notas -->
-      <div class="form-group">
-        <label>Notas</label>
-        <textarea [(ngModel)]="isRangeMode ? rangeForm.notes : form.notes"
-                  (ngModelChange)="isRangeMode ? rangeForm.notes = $event : form.notes = $event"
-                  rows="3" placeholder="Observaciones (opcional)..."></textarea>
-      </div>
+      <!-- ===== MODO RANGO ===== -->
+      <ng-container *ngIf="isRangeMode">
+        <div class="form-group" [class.has-error]="errors['employeeId']">
+          <label>Empleado <span class="required">*</span></label>
+          <select [(ngModel)]="rangeForm.employeeId">
+            <option [value]="0" disabled>-- Seleccione un empleado --</option>
+            <option *ngFor="let emp of employees" [value]="emp.id">{{ emp.fullName }}</option>
+          </select>
+          <span class="error-msg" *ngIf="errors['employeeId']">{{ errors['employeeId'] }}</span>
+        </div>
+        <div class="date-range">
+          <div class="form-group" [class.has-error]="errors['startDate']">
+            <label>Fecha Inicio <span class="required">*</span></label>
+            <input type="date" [(ngModel)]="rangeForm.startDate">
+            <span class="error-msg" *ngIf="errors['startDate']">{{ errors['startDate'] }}</span>
+          </div>
+          <div class="form-group" [class.has-error]="errors['endDate']">
+            <label>Fecha Fin <span class="required">*</span></label>
+            <input type="date" [(ngModel)]="rangeForm.endDate">
+            <span class="error-msg" *ngIf="errors['endDate']">{{ errors['endDate'] }}</span>
+          </div>
+        </div>
+        <p class="range-hint">* Los fines de semana se excluyen automaticamente</p>
+        <div class="form-group" [class.has-error]="errors['type']">
+          <label>Tipo <span class="required">*</span></label>
+          <select [(ngModel)]="rangeForm.type">
+            <option *ngFor="let t of absenceTypes" [value]="t">{{ labels[t] }}</option>
+          </select>
+          <span class="error-msg" *ngIf="errors['type']">{{ errors['type'] }}</span>
+        </div>
+        <div class="form-group">
+          <label>Notas</label>
+          <textarea [(ngModel)]="rangeForm.notes" rows="3" placeholder="Observaciones (opcional)..."></textarea>
+        </div>
+      </ng-container>
 
       <div class="form-actions">
         <button class="btn btn-secondary" (click)="cancel()">Cancelar</button>
