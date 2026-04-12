@@ -19,6 +19,10 @@ public class EmployeeService {
         return repository.findByActiveTrue();
     }
 
+    public List<Employee> findAllIncludingInactive() {
+        return repository.findAll();
+    }
+
     public Employee findById(Long id) {
         return repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Empleado no encontrado: " + id));

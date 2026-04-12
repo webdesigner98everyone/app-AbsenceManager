@@ -18,8 +18,8 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<Employee> getAll() {
-        return service.findAll();
+    public List<Employee> getAll(@RequestParam(required = false, defaultValue = "false") boolean includeInactive) {
+        return includeInactive ? service.findAllIncludingInactive() : service.findAll();
     }
 
     @GetMapping("/{id}")

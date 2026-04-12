@@ -12,6 +12,7 @@ export class EmployeesComponent implements OnInit {
   employees: Employee[] = [];
   filteredEmployees: Employee[] = [];
   searchText = '';
+  showInactive = false;
   showForm = false;
   showConfirmDelete = false;
   deleteTarget: Employee | null = null;
@@ -29,10 +30,18 @@ export class EmployeesComponent implements OnInit {
   }
 
   loadEmployees(): void {
-    this.employeeService.getAll().subscribe(data => {
-      this.employees = data;
+    const source = this.showInactive
+      ? this.employeeService.getAllIncludingInactive()
+      : this.employeeService.getAll();
+    source.subscribe(data => {
+      this.employees = this.showInactive ? data.filter(e => !e.active) : data;
       this.filterEmployees();
     });
+  }
+
+  toggleInactive(): void {
+    this.showInactive = !this.showInactive;
+    this.loadEmployees();
   }
 
   filterEmployees(): void {

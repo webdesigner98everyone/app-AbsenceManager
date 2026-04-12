@@ -14,6 +14,10 @@ export class EmployeeService {
     return this.http.get<Employee[]>(this.url);
   }
 
+  getAllIncludingInactive(): Observable<Employee[]> {
+    return this.http.get<Employee[]>(`${this.url}?includeInactive=true`);
+  }
+
   getById(id: number): Observable<Employee> {
     return this.http.get<Employee>(`${this.url}/${id}`);
   }

@@ -1,7 +1,12 @@
 <div class="employees">
   <div class="header">
     <h2>Empleados</h2>
-    <button class="btn btn-primary" (click)="openCreate()">+ Nuevo Empleado</button>
+    <div class="header-actions">
+      <button class="btn" [class.btn-secondary]="!showInactive" [class.btn-primary]="showInactive" (click)="toggleInactive()">
+        {{ showInactive ? '👁️ Ocultando inactivos' : '👁️ Ver inactivos' }}
+      </button>
+      <button class="btn btn-primary" (click)="openCreate()">+ Nuevo Empleado</button>
+    </div>
   </div>
 
   <!-- Modal Formulario -->
