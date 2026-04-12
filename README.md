@@ -1,6 +1,6 @@
 # AbsenceManager - Gestión de Ausencias
 
-Sistema para registrar días de vacaciones, permisos (flex) y compensatorios de los trabajadores del área de Integraciones.
+Sistema para registrar días de vacaciones, permisos (flex) y compensatorios de los trabajadores de un área.
 
 ## Tipos de Ausencia
 | Código | Descripción |
@@ -30,19 +30,25 @@ app-AbsenceManager/
 ```
 
 ## Requisitos
-- **Java 17+** (tienes Java 20)
-- **Node.js 18+** (tienes Node 22)
+- **Java 17+**
+- **Node.js 18+**
 - **Maven 3.8+**
+- **MySQL 5.7+** (XAMPP o similar)
 
 ## Ejecución
+
+### Base de Datos
+Crear la base de datos en MySQL:
+```sql
+CREATE DATABASE IF NOT EXISTS absence_manager CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
 
 ### Backend (Spring Boot)
 ```bash
 cd backend
-mvnw spring-boot:run
+.\mvnw.cmd spring-boot:run
 ```
 > API disponible en http://localhost:8080/api
-> Consola H2: http://localhost:8080/h2-console (JDBC URL: jdbc:h2:file:./data/absencedb)
 
 ### Frontend (Angular)
 ```bash
@@ -67,8 +73,11 @@ npm start
 |--------|----------|-------------|
 | GET | /api/absences | Listar todas |
 | GET | /api/absences/employee/{id} | Por empleado |
-| GET | /api/absences/month?year=2025&month=2 | Por mes |
-| GET | /api/absences/summary?year=2025 | Resumen anual |
+| GET | /api/absences/month?year=2026&month=2 | Por mes |
+| GET | /api/absences/summary?year=2026 | Resumen anual |
 | POST | /api/absences | Crear ausencia |
 | PUT | /api/absences/{id} | Actualizar |
 | DELETE | /api/absences/{id} | Eliminar |
+
+## Autor
+© 2026 Luis Alberto Forero Guzman

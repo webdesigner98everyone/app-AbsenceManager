@@ -1,0 +1,29 @@
+# Excel con datos reales
+*.xlsx
+*.xls
+
+# Backend
+backend/target/
+backend/data/
+*.jar
+*.class
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# SVG temporal
+frontend/src/favicon.svg
