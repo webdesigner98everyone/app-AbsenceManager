@@ -1,0 +1,49 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+
+.logo-icon { width: 24px; height: 24px; vertical-align: middle; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f2f5;
+  color: #333;
+  overflow-x: hidden;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &-primary {
+    background: #1a237e;
+    color: #fff;
+    &:hover { background: #283593; }
+  }
+
+  &-secondary {
+    background: #e0e0e0;
+    color: #333;
+    &:hover { background: #bdbdbd; }
+  }
+
+  &-danger {
+    background: #c62828;
+    color: #fff;
+    &:hover { background: #b71c1c; }
+  }
+}
+
+@media (max-width: 480px) {
+  .btn { padding: 8px 14px; font-size: 13px; }
+}

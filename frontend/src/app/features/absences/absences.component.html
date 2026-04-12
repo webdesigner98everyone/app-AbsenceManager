@@ -1,0 +1,105 @@
+<div class="absences">
+  <div class="header">
+    <h2>Registro de Ausencias</h2>
+    <button class="btn btn-primary" (click)="openCreate()">+ Nueva Ausencia</button>
+  </div>
+
+  <div class="filters">
+    <select [(ngModel)]="filterEmployee" (change)="loadAbsences()">
+      <option [value]="0">Todos los empleados</option>
+      <option *ngFor="let emp of employees" [value]="emp.id">{{ emp.fullName }}</option>
+    </select>
+    <select [(ngModel)]="filterMonth" (change)="loadAbsences()">
+      <option [value]="1">Enero</option><option [value]="2">Febrero</option>
+      <option [value]="3">Marzo</option><option [value]="4">Abril</option>
+      <option [value]="5">Mayo</option><option [value]="6">Junio</option>
+      <option [value]="7">Julio</option><option [value]="8">Agosto</option>
+      <option [value]="9">Septiembre</option><option [value]="10">Octubre</option>
+      <option [value]="11">Noviembre</option><option [value]="12">Diciembre</option>
+    </select>
+    <input type="number" [(ngModel)]="filterYear" (change)="loadAbsences()" min="2020" max="2030">
+  </div>
+
+  <!-- Modal Formulario -->
+  <div class="form-overlay" *ngIf="showForm">
+    <div class="form-card">
+      <h3>{{ editingAbsence ? 'Editar' : 'Nueva' }} Ausencia</h3>
+      <div class="form-group" [class.has-error]="errors['employeeId']">
+        <label>Empleado <span class="required">*</span></label>
+        <select [(ngModel)]="form.employeeId">
+          <option [ngValue]="undefined" disabled>-- Seleccione un empleado --</option>
+          <option *ngFor="let emp of employees" [value]="emp.id">{{ emp.fullName }}</option>
+        </select>
+        <span class="error-msg" *ngIf="errors['employeeId']">{{ errors['employeeId'] }}</span>
+      </div>
+      <div class="form-group" [class.has-error]="errors['date']">
+        <label>Fecha <span class="required">*</span></label>
+        <input type="date" [(ngModel)]="form.date">
+        <span class="error-msg" *ngIf="errors['date']">{{ errors['date'] }}</span>
+      </div>
+      <div class="form-group" [class.has-error]="errors['type']">
+        <label>Tipo <span class="required">*</span></label>
+        <select [(ngModel)]="form.type">
+          <option [ngValue]="undefined" disabled>-- Seleccione un tipo --</option>
+          <option *ngFor="let t of absenceTypes" [value]="t">{{ labels[t] }}</option>
+        </select>
+        <span class="error-msg" *ngIf="errors['type']">{{ errors['type'] }}</span>
+      </div>
+      <div class="form-group">
+        <label>Notas</label>
+        <textarea [(ngModel)]="form.notes" rows="3" placeholder="Observaciones (opcional)..."></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-secondary" (click)="cancel()">Cancelar</button>
+        <button class="btn btn-primary" (click)="save()">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Confirmar Eliminacion -->
+  <div class="form-overlay" *ngIf="showConfirmDelete">
+    <div class="form-card confirm-card">
+      <div class="confirm-icon">⚠️</div>
+      <h3>Confirmar Eliminacion</h3>
+      <p>¿Esta seguro de eliminar la ausencia de <strong>{{ deleteTarget?.employeeName }}</strong> del dia <strong>{{ deleteTarget?.date }}</strong>?</p>
+      <p class="confirm-warning">Esta accion no se puede deshacer.</p>
+      <div class="form-actions">
+        <button class="btn btn-secondary" (click)="cancelDelete()">Cancelar</button>
+        <button class="btn btn-danger" (click)="deleteAbsence()">Si, Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Empleado</th>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Notas</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let a of absences">
+          <td>{{ a.employeeName }}</td>
+          <td>{{ a.date }}</td>
+          <td>
+            <span class="type-badge" [style.background-color]="colors[a.type]">
+              {{ labels[a.type] }}
+            </span>
+          </td>
+          <td>{{ a.notes || '-' }}</td>
+          <td>
+            <button class="btn-icon" (click)="openEdit(a)">✏️</button>
+            <button class="btn-icon" (click)="confirmDelete(a)">🗑️</button>
+          </td>
+        </tr>
+        <tr *ngIf="absences.length === 0">
+          <td colspan="5" class="empty">No hay registros para este periodo</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

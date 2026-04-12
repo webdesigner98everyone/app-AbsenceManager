@@ -1,0 +1,44 @@
+<div class="app-layout" [class.sidebar-collapsed]="!sidebarOpen" [class.mobile]="isMobile">
+  <!-- Overlay móvil -->
+  <div class="sidebar-overlay" *ngIf="isMobile && sidebarOpen" (click)="sidebarOpen = false"></div>
+
+  <!-- Header móvil -->
+  <header class="mobile-header" *ngIf="isMobile">
+    <button class="hamburger" (click)="sidebarOpen = !sidebarOpen">☰</button>
+    <span class="mobile-title">
+      <img src="favicon.png" class="logo-icon-sm" alt="logo"> AbsenceManager
+    </span>
+  </header>
+
+  <aside class="sidebar" [class.open]="sidebarOpen">
+    <div class="sidebar-header">
+      <div class="brand" *ngIf="sidebarOpen">
+        <img src="favicon.png" class="logo-img" alt="logo">
+        <span class="brand-name">AbsenceManager</span>
+      </div>
+      <button class="collapse-btn" (click)="sidebarOpen = !sidebarOpen" *ngIf="!isMobile">
+        {{ sidebarOpen ? '◀ Ocultar menú' : '▶' }}
+      </button>
+      <button class="collapse-btn close-mobile" (click)="sidebarOpen = false" *ngIf="isMobile">
+        ✕ Cerrar
+      </button>
+    </div>
+    <nav>
+      <a *ngFor="let item of navItems"
+         [routerLink]="item.path"
+         routerLinkActive="active"
+         class="nav-item"
+         (click)="onNavClick()">
+        <span class="nav-icon">{{ item.icon }}</span>
+        <span class="nav-label" *ngIf="sidebarOpen">{{ item.label }}</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer" *ngIf="sidebarOpen">
+      <span>&copy; 2026 Luis Alberto Forero Guzman</span>
+    </div>
+  </aside>
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+  <app-toast></app-toast>
+</div>

@@ -1,0 +1,46 @@
+<div class="calendar">
+  <div class="header">
+    <h2>Calendario de Ausencias</h2>
+    <div class="nav">
+      <button class="btn btn-secondary" (click)="prevMonth()">◀</button>
+      <span class="month-label">{{ monthNames[month] }} {{ year }}</span>
+      <button class="btn btn-secondary" (click)="nextMonth()">▶</button>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span *ngFor="let entry of labels | keyvalue" class="legend-item">
+      <span class="legend-color" [style.background-color]="$any(colors)[entry.key]"></span>
+      {{ entry.value }}
+    </span>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th class="name-col">Nombre</th>
+          <th *ngFor="let d of days" [class.weekend]="d.isWeekend" class="day-col">
+            <div>{{ d.day }}</div>
+            <div class="dow">{{ d.dayOfWeek }}</div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let emp of employees">
+          <td class="name-col">{{ emp.fullName }}</td>
+          <td *ngFor="let d of days"
+              [class.weekend]="d.isWeekend"
+              class="day-cell">
+            <span *ngIf="getAbsence(emp.id, d.day) as type"
+                  class="absence-mark"
+                  [style.background-color]="colors[type]"
+                  [title]="labels[type]">
+              {{ type }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

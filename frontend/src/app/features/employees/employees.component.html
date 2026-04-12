@@ -1,0 +1,86 @@
+<div class="employees">
+  <div class="header">
+    <h2>Empleados</h2>
+    <button class="btn btn-primary" (click)="openCreate()">+ Nuevo Empleado</button>
+  </div>
+
+  <!-- Modal Formulario -->
+  <div class="form-overlay" *ngIf="showForm">
+    <div class="form-card">
+      <h3>{{ editingEmployee ? 'Editar' : 'Nuevo' }} Empleado</h3>
+      <div class="form-group" [class.has-error]="errors['fullName']">
+        <label>Nombre Completo <span class="required">*</span></label>
+        <input type="text" [(ngModel)]="form.fullName" placeholder="Nombre completo">
+        <span class="error-msg" *ngIf="errors['fullName']">{{ errors['fullName'] }}</span>
+      </div>
+      <div class="form-group" [class.has-error]="errors['area']">
+        <label>Area <span class="required">*</span></label>
+        <input type="text" [(ngModel)]="form.area" placeholder="Area">
+        <span class="error-msg" *ngIf="errors['area']">{{ errors['area'] }}</span>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" [(ngModel)]="form.active"> Activo
+        </label>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-secondary" (click)="cancel()">Cancelar</button>
+        <button class="btn btn-primary" (click)="save()">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Confirmar Eliminacion -->
+  <div class="form-overlay" *ngIf="showConfirmDelete">
+    <div class="form-card confirm-card">
+      <div class="confirm-icon">⚠️</div>
+      <h3>Confirmar Eliminacion</h3>
+      <p>¿Esta seguro de eliminar al empleado <strong>{{ deleteTarget?.fullName }}</strong>?</p>
+      <p class="confirm-warning">Esta accion no se puede deshacer.</p>
+      <div class="form-actions">
+        <button class="btn btn-secondary" (click)="cancelDelete()">Cancelar</button>
+        <button class="btn btn-danger" (click)="deleteEmployee()">Si, Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <span class="search-icon">🔍</span>
+    <input type="text" [(ngModel)]="searchText" (input)="filterEmployees()" placeholder="Buscar por nombre o area...">
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Area</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let emp of filteredEmployees">
+          <td>{{ emp.id }}</td>
+          <td>{{ emp.fullName }}</td>
+          <td>{{ emp.area }}</td>
+          <td>
+            <span class="status" [class.active]="emp.active" [class.inactive]="!emp.active">
+              {{ emp.active ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td>
+            <button class="btn-icon" (click)="openEdit(emp)" title="Editar">✏️</button>
+            <button class="btn-icon" (click)="confirmDelete(emp)" title="Eliminar">🗑️</button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredEmployees.length === 0">
+          <td colspan="5" class="empty">
+            {{ searchText ? 'No se encontraron empleados con "' + searchText + '"' : 'No hay empleados registrados' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
