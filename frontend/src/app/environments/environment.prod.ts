@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://RAILWAY_URL_AQUI/api'
+  apiUrl: 'https://hopeful-determination-production-63ef.up.railway.app/api'
 };
