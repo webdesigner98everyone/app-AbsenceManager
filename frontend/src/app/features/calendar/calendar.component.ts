@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { AbsenceService, EmployeeService } from '../../core/services';
 import { Absence, Employee, ABSENCE_COLORS, ABSENCE_LABELS, AbsenceType } from '../../core/models';
+import { environment } from '../../environments/environment';
 
 interface CalendarDay {
   day: number;
   dayOfWeek: string;
   isWeekend: boolean;
+  isHoliday: boolean;
 }
 
 @Component({
@@ -26,10 +29,12 @@ export class CalendarComponent implements OnInit {
   dayNames = ['D','L','M','M','J','V','S'];
 
   private absenceMap = new Map<string, AbsenceType>();
+  private holidays = new Set<string>();
 
   constructor(
     private absenceService: AbsenceService,
-    private employeeService: EmployeeService
+    private employeeService: EmployeeService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -40,13 +45,12 @@ export class CalendarComponent implements OnInit {
   }
 
   loadMonth(): void {
-    const daysInMonth = new Date(this.year, this.month, 0).getDate();
-    this.days = [];
-    for (let d = 1; d <= daysInMonth; d++) {
-      const date = new Date(this.year, this.month - 1, d);
-      const dow = date.getDay();
-      this.days.push({ day: d, dayOfWeek: this.dayNames[dow], isWeekend: dow === 0 || dow === 6 });
-    }
+    this.http.get<string[]>(`${environment.apiUrl}/holidays`, {
+      params: new HttpParams().set('year', this.year)
+    }).subscribe(data => {
+      this.holidays = new Set(data);
+      this.buildDays();
+    });
 
     this.absenceService.getByMonth(this.year, this.month).subscribe(data => {
       this.absences = data;
@@ -56,6 +60,22 @@ export class CalendarComponent implements OnInit {
         this.absenceMap.set(`${a.employeeId}-${dayNum}`, a.type);
       });
     });
+  }
+
+  private buildDays(): void {
+    const daysInMonth = new Date(this.year, this.month, 0).getDate();
+    this.days = [];
+    for (let d = 1; d <= daysInMonth; d++) {
+      const date = new Date(this.year, this.month - 1, d);
+      const dow = date.getDay();
+      const dateStr = `${this.year}-${String(this.month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      this.days.push({
+        day: d,
+        dayOfWeek: this.dayNames[dow],
+        isWeekend: dow === 0 || dow === 6,
+        isHoliday: this.holidays.has(dateStr)
+      });
+    }
   }
 
   getAbsence(employeeId: number, day: number): AbsenceType | null {

@@ -21,10 +21,12 @@ public class AbsenceService {
 
     private final AbsenceRepository repository;
     private final EmployeeService employeeService;
+    private final HolidayService holidayService;
 
-    public AbsenceService(AbsenceRepository repository, EmployeeService employeeService) {
+    public AbsenceService(AbsenceRepository repository, EmployeeService employeeService, HolidayService holidayService) {
         this.repository = repository;
         this.employeeService = employeeService;
+        this.holidayService = holidayService;
     }
 
     public List<AbsenceDTO> findAll() {
@@ -79,8 +81,7 @@ public class AbsenceService {
         LocalDate current = dto.getStartDate();
 
         while (!current.isAfter(dto.getEndDate())) {
-            DayOfWeek dow = current.getDayOfWeek();
-            if (dow != DayOfWeek.SATURDAY && dow != DayOfWeek.SUNDAY) {
+            if (!holidayService.isNonWorkingDay(current)) {
                 if (!repository.existsByEmployeeIdAndDate(dto.getEmployeeId(), current)) {
                     Absence absence = new Absence();
                     absence.setEmployee(employee);

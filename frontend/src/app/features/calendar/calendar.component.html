@@ -13,6 +13,10 @@
       <span class="legend-color" [style.background-color]="$any(colors)[entry.key]"></span>
       {{ entry.value }}
     </span>
+    <span class="legend-item">
+      <span class="legend-color holiday-color"></span>
+      Festivo
+    </span>
   </div>
 
   <div class="table-wrapper">
@@ -20,7 +24,10 @@
       <thead>
         <tr>
           <th class="name-col">Nombre</th>
-          <th *ngFor="let d of days" [class.weekend]="d.isWeekend" class="day-col">
+          <th *ngFor="let d of days"
+              [class.weekend]="d.isWeekend"
+              [class.holiday]="d.isHoliday"
+              class="day-col">
             <div>{{ d.day }}</div>
             <div class="dow">{{ d.dayOfWeek }}</div>
           </th>
@@ -31,6 +38,7 @@
           <td class="name-col">{{ emp.fullName }}</td>
           <td *ngFor="let d of days"
               [class.weekend]="d.isWeekend"
+              [class.holiday]="d.isHoliday"
               class="day-cell">
             <span *ngIf="getAbsence(emp.id, d.day) as type"
                   class="absence-mark"

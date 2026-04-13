@@ -16,6 +16,7 @@
     .legend-item {
       display: flex; align-items: center; gap: 6px; font-size: 13px; color: #555;
       .legend-color { width: 16px; height: 16px; border-radius: 4px; }
+      .holiday-color { background: #ef5350; }
     }
   }
 
@@ -47,6 +48,7 @@
       }
 
       .weekend { background: #f5f5f5; }
+      .holiday { background: #ffebee; }
 
       .day-cell { min-width: 36px; height: 36px; }
 

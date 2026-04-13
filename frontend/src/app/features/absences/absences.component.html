@@ -79,7 +79,7 @@
             <span class="error-msg" *ngIf="errors['endDate']">{{ errors['endDate'] }}</span>
           </div>
         </div>
-        <p class="range-hint">* Los fines de semana se excluyen automaticamente</p>
+        <p class="range-hint">* Los fines de semana y festivos se excluyen automaticamente</p>
         <div class="form-group" [class.has-error]="errors['type']">
           <label>Tipo <span class="required">*</span></label>
           <select [(ngModel)]="rangeForm.type">
