@@ -55,7 +55,8 @@ public class AbsenceService {
                 list.stream().filter(a -> a.getType() == AbsenceType.F).count(),
                 list.stream().filter(a -> a.getType() == AbsenceType.V).count(),
                 list.stream().filter(a -> a.getType() == AbsenceType.VT).count(),
-                list.stream().filter(a -> a.getType() == AbsenceType.C).count()
+                list.stream().filter(a -> a.getType() == AbsenceType.C).count(),
+                list.stream().filter(a -> a.getType() == AbsenceType.DF).count()
             );
         }).collect(Collectors.toList());
     }

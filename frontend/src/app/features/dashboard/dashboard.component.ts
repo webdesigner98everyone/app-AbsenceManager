@@ -13,11 +13,12 @@ export class DashboardComponent implements OnInit {
   currentYear = new Date().getFullYear();
   labels = ABSENCE_LABELS;
   colors = ABSENCE_COLORS;
-  absenceTypes: AbsenceType[] = ['F', 'V', 'VT', 'C'];
+  absenceTypes: AbsenceType[] = ['F', 'V', 'VT', 'C', 'DF'];
   totalFlex = 0;
   totalVacation = 0;
   totalVacationTaken = 0;
   totalCompensatory = 0;
+  totalFamilyDay = 0;
 
   constructor(
     private absenceService: AbsenceService,
@@ -36,18 +37,29 @@ export class DashboardComponent implements OnInit {
       this.totalVacation = data.reduce((s, d) => s + d.vacation, 0);
       this.totalVacationTaken = data.reduce((s, d) => s + d.vacationTaken, 0);
       this.totalCompensatory = data.reduce((s, d) => s + d.compensatory, 0);
+      this.totalFamilyDay = data.reduce((s, d) => s + d.familyDay, 0);
     });
   }
 
-  exportExcel(): void {
-    const header = ['Empleado', 'Flex/Permiso', 'Vacaciones', 'Vac. Tomadas', 'Compensatorio', 'Total'];
-    const rows = this.summaries.map(s =>
-      [s.employeeName, s.flex, s.vacation, s.vacationTaken, s.compensatory, s.total]
-    );
-    rows.push(['TOTAL', this.totalFlex, this.totalVacation, this.totalVacationTaken, this.totalCompensatory,
-      this.totalFlex + this.totalVacation + this.totalVacationTaken + this.totalCompensatory]);
+  getTotal(type: AbsenceType): number {
+    switch (type) {
+      case 'F': return this.totalFlex;
+      case 'V': return this.totalVacation;
+      case 'VT': return this.totalVacationTaken;
+      case 'C': return this.totalCompensatory;
+      case 'DF': return this.totalFamilyDay;
+    }
+  }
 
-    let csv = '\uFEFF'; // BOM para Excel
+  exportExcel(): void {
+    const header = ['Empleado', 'Flex/Permiso', 'Vacaciones', 'Vac. Tomadas', 'Compensatorio', 'Dia Familia', 'Total'];
+    const rows = this.summaries.map(s =>
+      [s.employeeName, s.flex, s.vacation, s.vacationTaken, s.compensatory, s.familyDay, s.total]
+    );
+    rows.push(['TOTAL', this.totalFlex, this.totalVacation, this.totalVacationTaken, this.totalCompensatory, this.totalFamilyDay,
+      this.totalFlex + this.totalVacation + this.totalVacationTaken + this.totalCompensatory + this.totalFamilyDay]);
+
+    let csv = '\uFEFF';
     csv += header.join(';') + '\n';
     rows.forEach(r => csv += r.join(';') + '\n');
 

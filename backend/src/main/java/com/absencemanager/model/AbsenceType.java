@@ -4,5 +4,6 @@ public enum AbsenceType {
     F,  // Flex / Permiso
     V,  // Vacaciones
     VT, // Vacaciones Tomadas
-    C   // Compensatorio
+    C,  // Compensatorio
+    DF  // Dia de la Familia
 }

@@ -14,7 +14,7 @@ export class AbsencesComponent implements OnInit {
   employees: Employee[] = [];
   labels = ABSENCE_LABELS;
   colors = ABSENCE_COLORS;
-  absenceTypes: AbsenceType[] = ['F', 'V', 'VT', 'C'];
+  absenceTypes: AbsenceType[] = ['F', 'V', 'VT', 'C', 'DF'];
 
   showForm = false;
   showConfirmDelete = false;

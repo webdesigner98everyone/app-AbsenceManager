@@ -18,6 +18,7 @@ export class HistoryComponent implements OnInit {
   totalVacation = 0;
   totalVacationTaken = 0;
   totalCompensatory = 0;
+  totalFamilyDay = 0;
   totalDays = 0;
 
   constructor(
@@ -42,6 +43,7 @@ export class HistoryComponent implements OnInit {
       this.totalVacation = data.filter(a => a.type === 'V').length;
       this.totalVacationTaken = data.filter(a => a.type === 'VT').length;
       this.totalCompensatory = data.filter(a => a.type === 'C').length;
+      this.totalFamilyDay = data.filter(a => a.type === 'DF').length;
       this.totalDays = data.length;
     });
   }
@@ -62,7 +64,7 @@ export class HistoryComponent implements OnInit {
     csv += `Historial de Ausencias - ${name}\n\n`;
     csv += header.join(';') + '\n';
     rows.forEach(r => csv += r.join(';') + '\n');
-    csv += `\nResumen:\nFlex/Permiso;${this.totalFlex}\nVacaciones;${this.totalVacation}\nVac. Tomadas;${this.totalVacationTaken}\nCompensatorio;${this.totalCompensatory}\nTotal;${this.totalDays}`;
+    csv += `\nResumen:\nFlex/Permiso;${this.totalFlex}\nVacaciones;${this.totalVacation}\nVac. Tomadas;${this.totalVacationTaken}\nCompensatorio;${this.totalCompensatory}\nDia Familia;${this.totalFamilyDay}\nTotal;${this.totalDays}`;
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
@@ -73,6 +75,6 @@ export class HistoryComponent implements OnInit {
   }
 
   private clearTotals(): void {
-    this.totalFlex = this.totalVacation = this.totalVacationTaken = this.totalCompensatory = this.totalDays = 0;
+    this.totalFlex = this.totalVacation = this.totalVacationTaken = this.totalCompensatory = this.totalFamilyDay = this.totalDays = 0;
   }
 }

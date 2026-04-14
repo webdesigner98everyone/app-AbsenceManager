@@ -23,7 +23,7 @@ public class Absence {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 2)
+    @Column(nullable = false, length = 5)
     private AbsenceType type;
 
     private String notes;
